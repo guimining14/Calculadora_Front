@@ -1,6 +1,25 @@
 let usuario = '';
 let usuarioId = null;
 
+const carregarHistorico = () => {
+  $.get('http://localhost:3000/api/v1/calculo/' + usuarioId , (historico) => {
+    historico.forEach(linhaHistorico => {
+      inserirLinhaTabela(linhaHistorico);
+    });
+  })
+}
+
+const inserirLinhaTabela = (linhaHistorico) => {
+  let corpo = $('#historicoCorpo')
+
+  let campoOperacao = `<td>${linhaHistorico.Operacao}</td>`;
+  let campoResultado = `<td>${linhaHistorico.Resultado}</td>`;
+
+  let linha = `<tr>${campoOperacao}${campoResultado}</tr>`;
+
+  corpo.prepend(linha);
+}
+
 const logar = () => {
   usuario = $('#textUsuario').val();
 
@@ -12,8 +31,9 @@ const logar = () => {
   $('#calc').show();
   $('#header').show();
   $('#formIncluir').hide();
+  $('#historico').show();
   iniciar();
-
+  carregarHistorico();
   });
  
 }
@@ -23,6 +43,7 @@ const calcular = (eq) => {
   $.post('http://localhost:3000/api/v1/calculo', {
     "equacao":eq, usuarioId: usuarioId
   }, (obj) => {
+    let operacao = eq;
       result = obj.resultado;
       $('#result p').html(result); 
       eq += "="+result;
@@ -31,6 +52,10 @@ const calcular = (eq) => {
       entry = result;
       curNumber = result;
       reset = true;
+      inserirLinhaTabela({
+        Operacao: operacao,
+        Resultado: result
+      });
   });
 
 

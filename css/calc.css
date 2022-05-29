@@ -80,3 +80,14 @@ button {
   width: 100px;
 }
 
+.historico {
+  width: 375px;
+  height: 183px;
+  background-color: azure;
+  margin: auto;
+  border-style: solid;
+  border-color: darkblue;
+  overflow: auto;
+  border-width: 2px;
+}
+
