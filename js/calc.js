@@ -53,7 +53,7 @@
       "equacao":eq, usuarioId: usuarioId
     }, (obj) => {
       let operacao = eq;
-        result = obj.resultado;
+        result = obj.Resultado;
         $('#result p').html(result); 
         eq += "="+result;
         $('#previous p').html(eq);
