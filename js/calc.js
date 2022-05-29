@@ -1,9 +1,50 @@
-$(document).ready(function() {
+let usuario = '';
+let usuarioId = null;
+
+const logar = () => {
+  usuario = $('#textUsuario').val();
+
+  $.post('http://localhost:3000/api/v1/usuarios', {
+    "Nome":usuario
+  }, (obj) => {
+    usuarioId = obj.Id
+  $('#labelUsuarioLogado').html(usuario + '(' + usuarioId + ')');
+  $('#calc').show();
+  $('#header').show();
+  $('#formIncluir').hide();
+  iniciar();
+
+  });
+ 
+}
+
+
+const calcular = (eq) => {
+  $.post('http://localhost:3000/api/v1/calculo', {
+    "equacao":eq, usuarioId: usuarioId
+  }, (obj) => {
+      result = obj.resultado;
+      $('#result p').html(result); 
+      eq += "="+result;
+      $('#previous p').html(eq);
+      eq = result;
+      entry = result;
+      curNumber = result;
+      reset = true;
+  });
+
+
+
+  
+}
+
+const iniciar = () => {
   var eq = "";
   var curNumber="";
   var result = "";
   var entry = "";
   var reset = false;
+
 
   $("button").click(function() {    
     entry = $(this).attr("value");   
@@ -41,14 +82,9 @@ $(document).ready(function() {
     }
     
     else if (entry === "=") {
-      result = eval(eq);
-      $('#result p').html(result); 
-      eq += "="+result;
-      $('#previous p').html(eq);
-      eq = result;
-      entry = result;
-      curNumber = result;
-      reset = true;
+
+      calcular (eq);
+      
     }
     
     else if (isNaN(entry)) {   //check if is not a number, and after that, prevents for multiple "." to enter the same number
@@ -109,5 +145,14 @@ $(document).ready(function() {
     
   });
     
+}
+
+
+$(document).ready(function() {
+  
+  $("#btnConfirmar").click(() => {
+    logar();
+  });
+
 
 });
